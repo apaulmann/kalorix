@@ -30,10 +30,11 @@ export function UserDetailsDialog({ open, onClose, person, token }: Props) {
         groesse: 0,
         gewicht: 0
     });
+    const serverUrl = import.meta.env.VITE_SERVER;
 
     useEffect(() => {
         if (open) {
-            fetch(`http://localhost:8081/api/user-details/${person}`, {
+            fetch(`${serverUrl}/api/user-details/${person}`, {
                 headers: { Authorization: `Bearer ${token}` }
             })
                 .then(r => r.ok ? r.json() : null)
@@ -42,7 +43,7 @@ export function UserDetailsDialog({ open, onClose, person, token }: Props) {
     }, [open, person, token]);
 
     const handleSave = async () => {
-        await fetch(`http://localhost:8081/api/user-details/${person}`, {
+        await fetch(`${serverUrl}/api/user-details/${person}`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
             body: JSON.stringify(details)

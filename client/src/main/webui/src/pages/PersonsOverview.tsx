@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Trash2, Pencil } from "lucide-react";
-import { toast } from "sonner"; // Optional: Für besseres Feedback
+import { toast } from "sonner";
+import {TbLogout} from "react-icons/tb"; // Optional: Für besseres Feedback
 
 type Person = {
     id: number;
@@ -27,10 +28,11 @@ export function PersonsOverview({ token, onLogout }: PersonsOverviewProps) {
     const [selected, setSelected] = useState<Person | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+    const serverUrl = import.meta.env.VITE_SERVER;
 
     const fetchPersons = async () => {
         try {
-            const response = await fetch("http://localhost:8081/api/persons", {
+            const response = await fetch(serverUrl +"/api/persons", {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`
@@ -70,8 +72,8 @@ export function PersonsOverview({ token, onLogout }: PersonsOverviewProps) {
     const handleSave = async () => {
         const method = selected ? "PUT" : "POST";
         const url = selected
-            ? `http://localhost:8081/api/persons/${selected.id}`
-            : "http://localhost:8081/api/persons"; // Vollständige URL auch hier verwenden
+            ? `${serverUrl}/api/persons/${selected.id}`
+            : serverUrl +"/api/persons"; // Vollständige URL auch hier verwenden
 
         try {
             const response = await fetch(url, {
@@ -100,7 +102,7 @@ export function PersonsOverview({ token, onLogout }: PersonsOverviewProps) {
         if (!window.confirm("Soll die Person wirklich gelöscht werden?")) return;
 
         try {
-            const response = await fetch(`http://localhost:8081/api/persons/${id}`, {
+            const response = await fetch(`${serverUrl}/api/persons/${id}`, {
                 method: "DELETE",
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -122,8 +124,10 @@ export function PersonsOverview({ token, onLogout }: PersonsOverviewProps) {
             <div className="flex justify-between items-center mb-4">
                 <h1 className="text-2xl font-bold">Personenverwaltung</h1>
                 <div>
-                    <Button onClick={() => handleOpenDialog()} className="mr-4"><Plus className="mr-2 h-4 w-4" /> Neue Person</Button>
-                    <Button onClick={onLogout} variant="outline">Logout</Button>
+                    <Button onClick={() => handleOpenDialog()} className="mr-4"><Plus className="mr-2 h-4 w-4" /></Button>
+                    <Button variant="outline" onClick={onLogout}>
+                        <TbLogout className="w-5 h-5"/>
+                    </Button>
                 </div>
             </div>
 

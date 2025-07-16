@@ -12,12 +12,14 @@ export function LoginPage({ onLogin }: LoginPageProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const serverUrl = import.meta.env.VITE_SERVER;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await fetch("http://localhost:8081/api/auth/login", {
+            console.log("Server URL:", serverUrl);
+            const response = await fetch(serverUrl + "/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ username, password }),

@@ -28,11 +28,12 @@ interface Props {
 export function TrackingOverview({ open, onClose, token, user, tagesbedarf }: Props) {
     const [entries, setEntries] = useState<TrackingEntry[]>([]);
     const [expanded, setExpanded] = useState<Set<string>>(new Set());
+    const serverUrl = import.meta.env.VITE_SERVER;
 
     useEffect(() => {
         if (!open) return;
 
-        fetch(`http://localhost:8081/api/kaltracking/all/${user}`, {
+        fetch(`${serverUrl}/api/kaltracking/all/${user}`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(res => res.ok ? res.json() : [])
@@ -56,7 +57,7 @@ export function TrackingOverview({ open, onClose, token, user, tagesbedarf }: Pr
     const groupedArray: DayGroup[] = Object.entries(grouped)
         .map(([date, entries]) => {
             const summe = entries.reduce((acc, e) => acc + e.kcal, 0);
-            const differenz = tagesbedarf !== null ? tagesbedarf - summe : null;
+            const differenz = tagesbedarf !== null ? summe - tagesbedarf : null;
             return { date, entries, summe, differenz };
         })
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

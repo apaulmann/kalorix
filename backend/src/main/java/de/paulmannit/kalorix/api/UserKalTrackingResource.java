@@ -58,6 +58,21 @@ public class UserKalTrackingResource {
         return Response.status(Response.Status.CREATED).entity(mapToDto(entity)).build();
     }
 
+    @PUT
+    @Path("/{user}")
+    @Transactional
+    public Response updateEntry(@PathParam("user") String userName, UserKalTrackingDto dto) {
+        Optional<UserKalTrackingEty> existing = Optional.ofNullable(repository.findById(dto.getId()));
+        if (existing.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        UserKalTrackingEty entity = existing.get();
+        entity.kcal = dto.getKcal();
+        entity.beschreibung = dto.getBeschreibung();
+        entity.zeitstempel = dto.getZeitstempel();
+        return Response.ok(mapToDto(entity)).build();
+    }
+
     @DELETE
     @Path("/{user}")
     @Transactional

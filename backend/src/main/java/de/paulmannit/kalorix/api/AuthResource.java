@@ -6,6 +6,7 @@ import de.paulmannit.kalorix.model.UserEty;
 import de.paulmannit.kalorix.service.JwtService;
 import de.paulmannit.kalorix.service.UserService;
 import io.quarkus.logging.Log;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
@@ -40,6 +41,7 @@ public class AuthResource {
     }
 
     // Einfache Hilfsklasse für Fehlermeldungen
+    @RegisterForReflection
     public static class ErrorResponse {
         public String message;
 
